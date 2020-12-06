@@ -2,11 +2,29 @@ package lab2
 
 import (
 	"fmt"
-	"regexp"
 	"strings"
 )
 
-var r = regexp.MustCompile("\\+|\\*|\\/|\\-|\\^|[0-9]*")
+type stack struct {
+	stack []string
+}
+
+func (s *stack) push(str string) {
+	s.stack = append(s.stack, str)
+}
+
+func (s *stack) len() int {
+	return len(s.stack)
+}
+
+func (s *stack) pop() *string {
+	if len(s.stack) == 0 {
+		return nil
+	}
+	lastItem := s.stack[len(s.stack)-1]
+	s.stack = s.stack[:len(s.stack)-1]
+	return &lastItem
+}
 
 func splitIntoTokens(input string) []string {
 	r := strings.NewReplacer(
@@ -23,7 +41,36 @@ func splitIntoTokens(input string) []string {
 	return tokens
 }
 
-// PrefixToPostfix converts
-func PrefixToPostfix(input string) (string, error) {
-	return "TODO", fmt.Errorf("TODO")
+func isOperator(s string) bool {
+	return s == "+" || s == "-" || s == "*" || s == "/" || s == "^"
+}
+
+func grammarError(s string) error {
+	return fmt.Errorf("Grammar error after '%s'", s)
+}
+
+// PostfixToPrefix converts postfix notation into the prefix one
+func PostfixToPrefix(input string) (string, error) {
+	tokens := splitIntoTokens(input)
+	stack := stack{}
+	for _, s := range tokens {
+		if isOperator(s) {
+			a := stack.pop()
+			b := stack.pop()
+
+			if a == nil {
+				return "", grammarError(s)
+			} else if b == nil {
+				return "", grammarError(*a)
+			}
+			stack.push(fmt.Sprintf("%s %s %s", s, *b, *a))
+		} else {
+			stack.push(s)
+		}
+	}
+	if stack.len() > 1 {
+		return "", fmt.Errorf("Multiple expressions")
+	}
+	res := stack.pop()
+	return *res, nil
 }
