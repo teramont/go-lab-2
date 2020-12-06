@@ -1,4 +1,6 @@
-Шаблон для 2-гої роботи з архітектури ПЗ
----
+# Architecture lab 2
 
-Використайте кнопку **"Use this template"**, щоб створити власний репозиторій.
+## Examples of builds
+- Sucess
+- Failure
+- Pull-Request
