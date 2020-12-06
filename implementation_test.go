@@ -39,7 +39,7 @@ func TestPostfixToPrefix(t *testing.T) {
 	}
 }
 
-func ExamplePrefixToPostfix() {
+func ExamplePostfixToPrefix() {
 	res, _ := PostfixToPrefix("2 2 +")
 	fmt.Println(res)
 
