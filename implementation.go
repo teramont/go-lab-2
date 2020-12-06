@@ -51,6 +51,9 @@ func grammarError(s string) error {
 
 // PostfixToPrefix converts postfix notation into the prefix one
 func PostfixToPrefix(input string) (string, error) {
+	if strings.Trim(input, " \t\n") == "" {
+		return "", nil
+	}
 	tokens := splitIntoTokens(input)
 	stack := stack{}
 	for _, s := range tokens {
