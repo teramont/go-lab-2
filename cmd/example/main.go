@@ -16,6 +16,12 @@ var (
 	outputFile      = flag.String("o", "", "File to output the result")
 )
 
+func handleError(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func main() {
 	flag.Parse()
 	var reader io.Reader
@@ -26,9 +32,7 @@ func main() {
 	} else if len(*inputFile) > 0 {
 		file, err := os.Open(*inputFile)
 		defer file.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
+		handleError(err)
 		reader = file
 	} else {
 		log.Fatal("Reader interface not defined")
@@ -37,9 +41,7 @@ func main() {
 	if len(*outputFile) > 0 {
 		file, err := os.Create(*outputFile)
 		defer file.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
+		handleError(err)
 		writer = file
 	} else {
 		writer = os.Stdout
@@ -50,8 +52,6 @@ func main() {
 		Output: writer,
 	}
 
-	err := handler.Compute()
-	if err != nil {
-		log.Fatal(err)
-	}
+	handleError(handler.Compute())
+
 }
